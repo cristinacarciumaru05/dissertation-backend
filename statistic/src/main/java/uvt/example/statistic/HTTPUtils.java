@@ -11,9 +11,9 @@ import org.apache.http.util.EntityUtils;
 public class HTTPUtils {
 	private String doiX;
 	private String doiY;
-	private InformationType informationType;
+	private InfoType informationType;
 
-	public HTTPUtils(String doiX, String doiY, InformationType informationType) {
+	public HTTPUtils(String doiX, String doiY, InfoType informationType) {
 		this.doiX = doiX;
 		this.doiY = doiY;
 		this.informationType = informationType;
@@ -47,14 +47,14 @@ public class HTTPUtils {
 		return result;
 	}
 
-	enum InformationType {
+	enum InfoType {
 		PLU("https://plu.mx/api/v1/artifact/doi/"),
-		DOI("http://dx.doi.org/"),
-		WOS("http://ws.isiknowledge.com/cps/openurl/service?url_ver=Z39.88-2004&rft_id=info:doi/");
+		DOI("http://dx.doi.org/");
+		// WOS("http://ws.isiknowledge.com/cps/openurl/service?url_ver=Z39.88-2004&rft_id=info:doi/");
 
 		private String url;
 
-		private InformationType(String url) {
+		private InfoType(String url) {
 			this.url = url;
 		}
 

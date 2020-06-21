@@ -17,7 +17,7 @@ public class JournalParser implements CustomFileReader {
 		readFile(fileName);
 	}
 
-	private static Journal parseJournalObject(JSONObject journal) {
+	public static Journal parseJournalObject(JSONObject journal) {
 		double journalImpactFactor = (double) journal.get("journalImpactFactor");
 		double articleInfluenceScore = (double) journal.get("articleInfluenceScore");
 		String categoryName = (String) journal.get("categoryName");
@@ -25,7 +25,7 @@ public class JournalParser implements CustomFileReader {
 		if (issn == null) {
 			issn = "";
 		}
-		long year = (long) journal.get("year");
+		int year = (int) journal.get("year");
 
 		return new Journal(journalImpactFactor, articleInfluenceScore, categoryName, issn, year);
 	}

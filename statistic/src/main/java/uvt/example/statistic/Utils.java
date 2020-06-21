@@ -3,12 +3,21 @@ package uvt.example.statistic;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.AbstractSequentialList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Utils {
-	public List<Journal> Journals = new ArrayList<Journal>();
+
+	public static List<Journal> Journals = new ArrayList<Journal>();
+	public static List<Paper> Papers = new ArrayList<Paper>();
+	public static List<Book> Books = new ArrayList<Book>();
 
 	public static String getType(JSONObject jsonObject) {
 		return (String) jsonObject.get("type");
@@ -77,6 +86,17 @@ public class Utils {
 
 	public static String getPublisherLocation(JSONObject jsonObject) {
 		return (String) jsonObject.get("publisher-location");
+	}
+
+	// general function to find all files from a directory
+	public static List<String> getFilePaths(String directory){
+		List<String> paths2 = new ArrayList<String>();
+		try (Stream<Path> paths = Files.walk(Paths.get(directory))) {
+			paths.filter(Files::isRegularFile).forEach(x -> paths2.add(x.toString()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return paths2;
 	}
 
 

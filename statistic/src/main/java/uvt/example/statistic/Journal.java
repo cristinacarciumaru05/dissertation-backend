@@ -5,9 +5,9 @@ public class Journal {
 	private double articleInfluenceScore;
 	private String categoryName;
 	private String issn;
-	private long year;
+	private int year;
 
-	public Journal(double journalImpactFactor, double articleInfluenceScore, String categoryName, String issn, long year) {
+	public Journal(double journalImpactFactor, double articleInfluenceScore, String categoryName, String issn, int year) {
 		this.journalImpactFactor = journalImpactFactor;
 		this.articleInfluenceScore = articleInfluenceScore;
 		this.categoryName = categoryName;
@@ -47,11 +47,11 @@ public class Journal {
 		this.issn = issn;
 	}
 
-	public long getYear() {
+	public int getYear() {
 		return year;
 	}
 
-	public void setYear(long year) {
+	public void setYear(int year) {
 		this.year = year;
 	}
 }
