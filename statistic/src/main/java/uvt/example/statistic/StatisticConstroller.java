@@ -3,16 +3,18 @@ package uvt.example.statistic;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import uvt.example.dto.Results;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 public class StatisticConstroller {
 
 	@GetMapping("/get-data")
@@ -136,6 +138,11 @@ public class StatisticConstroller {
 			default:
 				return "Invalid type";
 		}
+	}
+
+	@GetMapping("/test")
+	public Results test() { //@RequestParam Input input
+		return new Results();
 	}
 
 }
