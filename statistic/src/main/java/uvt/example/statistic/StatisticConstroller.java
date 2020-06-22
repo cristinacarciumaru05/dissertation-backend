@@ -3,7 +3,6 @@ package uvt.example.statistic;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +26,13 @@ public class StatisticConstroller {
 		JSONObject jsonObj = (JSONObject) parser.parse(rcvHTTPJSON);
 		String year = Utils.getYear(jsonObj);
 		String type = Utils.getType(jsonObj);
+		String classCNATDCU = " ";
+		String classINFO = " ";
 		switch (type) {
 			case "article-journal":
 				List<String> issn = Utils.getIssns(jsonObj);
 				String title = Utils.getContainerTitle(jsonObj);
-				String classCNATDCU = " ";
-				String classINFO = "D";
+				classINFO = "D";
 				// process journal
 				Journal latestJournal = Utils.Journals.stream().filter(x -> x.getIssn().equals(issn)).collect(Collectors.toList()).stream().max(Comparator.comparing(Journal::getYear)).orElse(null);
 				List<Journal> categoryJournals = new ArrayList<Journal>();
@@ -130,11 +130,47 @@ public class StatisticConstroller {
 				String acronym = acrEvTitle[0];
 				String eventTitle = acrEvTitle[1];
 				// process paper
+				Paper latestPaper = Utils.Papers.stream().filter(x -> x.getAcronym().equals(acronym)).collect(Collectors.toList()).stream().max(Comparator.comparing(Paper::getYear)).orElse(null);
+				boolean found = false;
+				if (latestPaper != null) {
+					found = true;
+				}
+//				if (isInWOS) {
+//					classCNATDCU = "ISI PROC";
+//				}
+				if (doiX.equals("10.1109")) {
+					classCNATDCU = "IEE PROC";
+				}
+				if (isInfo) {
+					classINFO = "D";
+					if (found) {
+						if (Utils.getSimilarity(eventTitle, latestPaper.getPaperName()) >= 0.750) {
+							classINFO = latestPaper.getGrade();
+						}
+					}
+				}
+
+				System.out.println("Type: Paper-Conference");
+				System.out.println("ClassificCNATDCU: " + classCNATDCU);
+//				if (isInWOS) {
+//
+//				}
+				System.out.println("Info: " + classINFO);
+
 			case "chapter":
 			case "book":
 				String publisher = Utils.getPublisher(jsonObj);
 				String publisherLocation = Utils.getPublisherLocation(jsonObj);
 				// process book
+				Book latestBook = Utils.Books.stream().filter(x -> x.getPublisher().equals(publisher) && x.getPublisherLocation().equals(publisherLocation)).collect(Collectors.toList()).stream().max(Comparator.comparing(Book::getYear)).orElse(null);
+				if (latestBook != null) {
+					classINFO = latestBook.getClassInfo();
+				}
+				System.out.println("Type: Book/Chapter");
+				System.out.println("ClassificCNATDCU: " + classCNATDCU);
+//				if (isInWOS) {
+//				}
+				System.out.println("Info: " + classINFO);
 			default:
 				return "Invalid type";
 		}
