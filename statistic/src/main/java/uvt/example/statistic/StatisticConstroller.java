@@ -3,6 +3,7 @@ package uvt.example.statistic;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +14,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*",allowedHeaders = "*",maxAge = 3600)
 @RestController
 public class StatisticConstroller {
 
 	@GetMapping("/get-data")
-	public String getData(@RequestParam String doiX, @RequestParam String doiY, @RequestParam boolean isInfo) throws ParseException {
+	public Results getData(@RequestParam String doiX, @RequestParam String doiY, @RequestParam boolean isInfo) throws ParseException {
 
 		HTTPUtils httpRequest = new HTTPUtils(doiX, doiY, HTTPUtils.InfoType.DOI);
 		String rcvHTTPJSON = httpRequest.getInformation();
@@ -123,7 +125,7 @@ public class StatisticConstroller {
 				System.out.println("Type: Article-Journal");
 				System.out.println("ClassificCNATDCU: " + classCNATDCU);
 				System.out.println("Info: " + classINFO);
-
+				return new Results( "Article-Journal",classCNATDCU,classINFO,jsonObj.toString());
 			case "paper-conference":
 				String event = Utils.getEvent(jsonObj);
 				String[] acrEvTitle = Utils.extrectAcrEvtTitle(event);
@@ -156,7 +158,7 @@ public class StatisticConstroller {
 //
 //				}
 				System.out.println("Info: " + classINFO);
-
+				return new Results( "Paper-Conference",classCNATDCU,classINFO,jsonObj.toString());
 			case "chapter":
 			case "book":
 				String publisher = Utils.getPublisher(jsonObj);
@@ -171,8 +173,9 @@ public class StatisticConstroller {
 //				if (isInWOS) {
 //				}
 				System.out.println("Info: " + classINFO);
+				return new Results( "Book/Chapter",classCNATDCU,classINFO,jsonObj.toString());
 			default:
-				return "Invalid type";
+				return new Results();
 		}
 	}
 
