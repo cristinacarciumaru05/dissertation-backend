@@ -15,4 +15,12 @@ public class Results {
 
     private boolean showJson;
     private String json;
+
+    public Results(String type,String cnatdcu,String info,String json){
+        this.type=type;
+        this.cnatdcu=cnatdcu;
+        this.INFO=info;
+        this.json=json;
+    }
+    public Results(){};
 }
